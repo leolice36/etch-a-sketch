@@ -3,12 +3,28 @@ const container = document.querySelector('#container')
 let numberOfDiv = (16*16); //default size
 
 // Function to generate a random RGB color
-function getRandomRGB() {
-    const r = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Red
-    const g = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Green
-    const b = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Blue
-    return `rgb(${r}, ${g}, ${b})`; // Return the RGB color string
+// function getRandomRGB() {
+//     const r = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Red
+//     const g = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Green
+//     const b = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Blue
+//     return `rgb(${r}, ${g}, ${b})`; // Return the RGB color string
+// }
+
+
+
+function darkenOnHover(element) {
+    let opacity = parseFloat(element.dataset.opacity) || 0;
+    // Increase the opacity by 0.1 on each hover, but cap it at 1 (100% opacity)
+    opacity = Math.min(opacity + 0.1, 1);
+
+    // Set the new background color with the current opacity for the black overlay
+    element.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+
+    element.dataset.opacity = opacity;
 }
+
+
+
 
 function addMultiDivs(){
     for (i = 0; i < numberOfDiv; i++){
@@ -23,7 +39,11 @@ function addMultiDivs(){
     boxes.forEach(box => {
     box.addEventListener('mouseover',() => {
         // box.style.backgroundColor = "black";
-        box.style.backgroundColor = getRandomRGB();
+        // box.style.backgroundColor = getRandomRGB();
+
+        box.addEventListener('mouseenter', function() {
+        darkenOnHover(box); // Darken the color on hover
+        }); 
     })
 });
 }
