@@ -1,38 +1,82 @@
 const container = document.querySelector('#container')
 
-const numberOfDiv = (16*16);
+let numberOfDiv = (16*16); //default size
 
 function addMultiDivs(){
     for (i = 0; i < numberOfDiv; i++){
         const newDiv = document.createElement('div')
 
-        newDiv.textContent = `${i+1}`;
+        // newDiv.textContent = `${i+1}`; //numbers the boxes
         newDiv.className = 'boxDiv';
         container.appendChild(newDiv)
     }
+    const boxes = document.querySelectorAll('.boxDiv');
+
+    boxes.forEach(box => {
+    box.addEventListener('mouseover',() => {
+        box.style.backgroundColor = "black";
+    })
+});
 }
 
 addMultiDivs();
 
 
-const boxes = document.querySelectorAll('.boxDiv');
 
-boxes.forEach(box => {
-    box.addEventListener('mouseover',() => {
-        box.style.backgroundColor = "black";
-    })
-});
 
 //Everything above works perfect
+
+const input = document.querySelector("input")
+const button = document.querySelector("#sizeBtn")
+
+function deleteMultiDivs(){
+    const container = document.getElementById('container');
+
+    // Remove all divs within the container
+    const divs = container.querySelectorAll('div');
+    divs.forEach(div => div.remove());
+}
+
+function updateDimension(){
+    const sideLength = Number(input.value);
+    if (sideLength === ''){
+      return
+      }
+    else if(isNaN(sideLength)){
+        console.log("not a number")
+        return
+    }
+    else if(sideLength > 100){
+        console.log("100 max please")
+        return
+    }
+    
+    deleteMultiDivs();
+    numberOfDiv = (sideLength)**2;
+
+    addMultiDivs();
+    
+    
+    const boxDiv = document.querySelectorAll('.boxDiv');
+    const newFlexBasis = `${(1/sideLength)*100}%`;
+    boxDiv.forEach((box) => {
+        box.style.flexBasis = newFlexBasis;
+    });
+    
+
+}
+
+button.addEventListener('click',updateDimension)
+
 // for next the feature (button that resizes and resets the pad)
-    // make button above pad (maybe stack with flex)
-    // make function for button
-        // function prompts "enter pad side lenght"
-            // limit 100
-        //input value passed to numberOfDiv
-        // should remove the existing divs before the new one appears (try append or delete all children 
-        // of container before running addMultiDivs() again
-            //should adjust flex basis to (1/sideLeght)*100
+    // make button above pad (maybe stack with flex) checck
+    // make function for button check
+        // function prompts "enter pad side lenght" (canceled, used input element instead)
+            // limit 100 check
+        //input value passed to numberOfDiv check
+        // should remove the existing divs before the new one appears (try append or delete all children) 
+        // of container before running addMultiDivs() again check
+            //should adjust flex basis to (1/sideLeght)*100 check
 
 
 //clean up 
@@ -42,4 +86,5 @@ boxes.forEach(box => {
 //extra features
     //random RGB for color change
     //only 10% opacity color for each pass, upon 10 passes full black
+    // ideally make buttons for each of these settings 
 
