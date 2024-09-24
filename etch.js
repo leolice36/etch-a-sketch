@@ -2,13 +2,13 @@ const container = document.querySelector('#container')
 
 let numberOfDiv = (16*16); //default size
 
-// Function to generate a random RGB color
-// function getRandomRGB() {
-//     const r = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Red
-//     const g = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Green
-//     const b = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Blue
-//     return `rgb(${r}, ${g}, ${b})`; // Return the RGB color string
-// }
+
+function getRandomRGB() {
+    const r = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Red
+    const g = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Green
+    const b = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Blue
+    return `rgb(${r}, ${g}, ${b})`; // Return the RGB color string
+}
 
 
 
@@ -23,8 +23,17 @@ function darkenOnHover(element) {
     element.dataset.opacity = opacity;
 }
 
+const modeBtn = document.querySelector('#modeBtn');
+modeBtn.addEventListener('click', applyMode)
 
-
+let modeApplied = 'darken';
+function applyMode(){
+    modeApplied = document.querySelector('input[name="mode"]:checked');
+    const divs = container.querySelectorAll('div');
+    divs.forEach(function(box){
+        box.style.backgroundColor = 'aquamarine';
+    });
+}
 
 function addMultiDivs(){
     for (i = 0; i < numberOfDiv; i++){
@@ -40,10 +49,15 @@ function addMultiDivs(){
     box.addEventListener('mouseover',() => {
         // box.style.backgroundColor = "black";
         // box.style.backgroundColor = getRandomRGB();
-
-        box.addEventListener('mouseenter', function() {
-        darkenOnHover(box); // Darken the color on hover
-        }); 
+        const selectedMode = modeApplied
+        if (selectedMode.value === 'rgb'){
+            box.style.backgroundColor = getRandomRGB();
+        }
+        else {
+            box.addEventListener('mouseenter', function() {
+            darkenOnHover(box); // Darken the color on hover
+            }); 
+        }
     })
 });
 }
@@ -56,7 +70,7 @@ addMultiDivs();
 //Everything above works perfect
 
 const input = document.querySelector("input")
-const button = document.querySelector("#sizeBtn")
+const sizeBtn = document.querySelector("#sizeBtn")
 
 function deleteMultiDivs(){
     const container = document.getElementById('container');
@@ -95,7 +109,14 @@ function updateDimension(){
 
 }
 
-button.addEventListener('click',updateDimension)
+sizeBtn.addEventListener('click',updateDimension)
+input.addEventListener('keydown',function(event){
+    if (event.key === 'Enter'){
+      updateDimension();
+    }
+  }
+);
+
 
 // for next the feature (button that resizes and resets the pad)
     // make button above pad (maybe stack with flex) checck
@@ -109,11 +130,11 @@ button.addEventListener('click',updateDimension)
 
 
 //clean up 
-    //remove numbers
-    //remove border
+    //remove numbers check
+    //remove border canceled
 
 //extra features
-    //random RGB for color change
-    //only 10% opacity color for each pass, upon 10 passes full black
+    //random RGB for color change check
+    //only 10% opacity color for each pass, upon 10 passes full black check
     // ideally make buttons for each of these settings 
 
