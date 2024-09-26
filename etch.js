@@ -1,12 +1,13 @@
 const container = document.querySelector('#container')
-
-let numberOfDiv = (16*16); //default size
+let sideLengthGlobal = 16
+let numberOfDiv = (sideLengthGlobal**2) ; //default size
 
 
 function getRandomRGB() {
-    const r = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Red
-    const g = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Green
-    const b = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Blue
+    const min = 127;
+    const r = Math.floor(Math.random() * (256 - min) + min); // Random value between 0 and 255 for Red
+    const g = Math.floor(Math.random() * (256 - min) + min); // Random value between 0 and 255 for Green
+    const b = Math.floor(Math.random() * (256 - min) + min); // Random value between 0 and 255 for Blue
     return `rgb(${r}, ${g}, ${b})`; 
     // Return the RGB color string
 }
@@ -33,36 +34,58 @@ function applyMode(){
     addMultiDivs();
     modeApplied = document.querySelector('input[name="mode"]:checked');
     const divs = container.querySelectorAll('div');
-    divs.forEach(function(box){
-        box.style.backgroundColor = 'aquamarine';
-    });
+    const background = document.querySelector('body');
+
+    // let x = modeApplied.value;
+    // console.log({x});
+
+    if (modeApplied.value === 'darken'){
+        divs.forEach(box => {
+            box.style.backgroundColor = '#00ffe1';
+            box.style.borderColor = 'white'
+            background.style.backgroundColor = 'white';
+            container.style.borderColor = 'white';
+        });
+    } 
+    else if (modeApplied.value === 'rgb'){
+        divs.forEach(box => {
+            box.style.backgroundColor = '#1e1e1e';
+            box.style.borderColor = '#858585'
+            background.style.backgroundColor = '858585';
+            container.style.borderColor = 'white';
+        });
+    }
 }
 
 function addMultiDivs(){
     for (i = 0; i < numberOfDiv; i++){
         const newDiv = document.createElement('div')
-
-        // newDiv.textContent = `${i+1}`; //numbers the boxes
         newDiv.className = 'boxDiv';
         container.appendChild(newDiv)
     }
+
     const boxes = document.querySelectorAll('.boxDiv');
 
+
     boxes.forEach(box => {
-    box.addEventListener('mouseover',() => {
-        const selectedMode = modeApplied
-        if (selectedMode.value === 'rgb'){
-            box.style.backgroundColor = getRandomRGB();
-        }
-        else {
-            darkenOnHover(box); // Darken the color on hover
-        }
-    })
-});
+        box.addEventListener('mouseover',() => {
+            const selectedMode = modeApplied
+            if (selectedMode.value === 'rgb'){
+                box.style.backgroundColor = getRandomRGB();
+            } else {
+                darkenOnHover(box); // Darken the color on hover
+            }
+        })
+    });
+    const boxDiv = document.querySelectorAll('.boxDiv');
+    const newFlexBasis = `${(1/sideLengthGlobal)*100}%`;
+    boxDiv.forEach((box) => {
+        box.style.flexBasis = newFlexBasis;
+    });
 }
 
-addMultiDivs();
-
+// addMultiDivs();
+applyMode();
 
 
 
@@ -79,32 +102,23 @@ function deleteMultiDivs(){
     divs.forEach(div => div.remove());
 }
 
+
+
 function updateDimension(){
-    const sideLength = Number(input.value);
-    if (sideLength === ''){
+    const sideLength = document.querySelector('#size');
+    console.log(sideLength.value)
+
+    if (sideLength.value === ''){
       return
       }
-    else if(isNaN(sideLength)){
-        console.log("not a number")
-        return
-    }
-    else if(sideLength > 100){
+    else if(sideLength.value > 100){
         console.log("100 max please")
         return
     }
+    numberOfDiv = (sideLength.value)**2;
+    sideLengthGlobal = sideLength.value;
     
-    deleteMultiDivs();
-    numberOfDiv = (sideLength)**2;
-
-    addMultiDivs();
-    
-    
-    const boxDiv = document.querySelectorAll('.boxDiv');
-    const newFlexBasis = `${(1/sideLength)*100}%`;
-    boxDiv.forEach((box) => {
-        box.style.flexBasis = newFlexBasis;
-    });
-    
+    applyMode();
 
 }
 
@@ -116,6 +130,12 @@ input.addEventListener('keydown',function(event){
   }
 );
 
+function preventInvalidInput(event) {
+    // Prevent 'e', 'E', '+', and '-'
+    if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+        event.preventDefault();
+    }
+}
 
 // for next the feature (button that resizes and resets the pad)
     // make button above pad (maybe stack with flex) checck
