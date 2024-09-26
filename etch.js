@@ -7,7 +7,8 @@ function getRandomRGB() {
     const r = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Red
     const g = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Green
     const b = Math.floor(Math.random() * 256); // Random value between 0 and 255 for Blue
-    return `rgb(${r}, ${g}, ${b})`; // Return the RGB color string
+    return `rgb(${r}, ${g}, ${b})`; 
+    // Return the RGB color string
 }
 
 
@@ -28,6 +29,8 @@ modeBtn.addEventListener('click', applyMode)
 
 let modeApplied = 'darken';
 function applyMode(){
+    deleteMultiDivs();
+    addMultiDivs();
     modeApplied = document.querySelector('input[name="mode"]:checked');
     const divs = container.querySelectorAll('div');
     divs.forEach(function(box){
@@ -47,16 +50,12 @@ function addMultiDivs(){
 
     boxes.forEach(box => {
     box.addEventListener('mouseover',() => {
-        // box.style.backgroundColor = "black";
-        // box.style.backgroundColor = getRandomRGB();
         const selectedMode = modeApplied
         if (selectedMode.value === 'rgb'){
             box.style.backgroundColor = getRandomRGB();
         }
         else {
-            box.addEventListener('mouseenter', function() {
             darkenOnHover(box); // Darken the color on hover
-            }); 
         }
     })
 });
